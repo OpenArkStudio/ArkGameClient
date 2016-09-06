@@ -16,11 +16,11 @@ using NFCoreEx;
 namespace PlayerNetClient
 {
    
-public class PlayerSend 
+public class PlayerSender 
 {
     PlayerNet mxPlayerNet = null;
 
-    public PlayerSend(PlayerNet clientnet)
+    public PlayerSender(PlayerNet clientnet)
     {
         mxPlayerNet = clientnet;
     }
@@ -636,7 +636,7 @@ public class PlayerSend
     {
         //申请移动
         NFMsg.ReqAckMoveBuildObject xData = new NFMsg.ReqAckMoveBuildObject();
-        xData.object_guid = PlayerSend.NFToPB((NFCoreEx.NFIDENTID)buildingID);
+        xData.object_guid = PlayerSender.NFToPB((NFCoreEx.NFIDENTID)buildingID);
         xData.x = fx;
         xData.y = fy;
         xData.z = fz;

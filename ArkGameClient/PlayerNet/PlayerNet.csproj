@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientEventDefine.cs" />
-    <Compile Include="PlayerSend.cs" />
+    <Compile Include="PlayerSender.cs" />
     <Compile Include="PlayerReciver.cs" />
     <Compile Include="PlayerNet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

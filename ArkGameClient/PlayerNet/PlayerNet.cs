@@ -37,7 +37,7 @@ public class PlayerNet
     public PlayerNet()
     {
         mxReciver = new PlayerReciver(this);
-        mxSender = new PlayerSend(this);
+        mxSender = new PlayerSender(this);
         mxNet = new NFNet();
     }
 
@@ -86,6 +86,6 @@ public class PlayerNet
 
     public NFNet mxNet = null;
     public PlayerReciver mxReciver =  null;
-    public PlayerSend mxSender = null; 
+    public PlayerSender mxSender = null; 
 }
 }

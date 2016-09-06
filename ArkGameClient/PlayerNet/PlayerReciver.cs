@@ -117,7 +117,7 @@ namespace PlayerNetClient
             {
                 mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN;
 
-                PlayerSend sender = mxPlayerNet.mxSender;
+                PlayerSender sender = mxPlayerNet.mxSender;
                 if (null != sender)
                 {
                     sender.RequireWorldList();
@@ -185,7 +185,7 @@ namespace PlayerNetClient
                 mxPlayerNet.nMainRoleID = PBToNF(xData.event_object);
 
                 //申请世界内的服务器列表
-                PlayerSend sender = mxPlayerNet.mxSender;
+                PlayerSender sender = mxPlayerNet.mxSender;
                 if (null != sender)
                 {
                     sender.RequireServerList();
@@ -203,7 +203,7 @@ namespace PlayerNetClient
 
             if (xData.event_code == EGameEventCode.EGEC_SELECTSERVER_SUCCESS)
             {
-                PlayerSend sender = mxPlayerNet.mxSender;
+                PlayerSender sender = mxPlayerNet.mxSender;
                 if (null != sender)
                 {
                     sender.RequireRoleList(mxPlayerNet.strAccount, mxPlayerNet.nServerID);

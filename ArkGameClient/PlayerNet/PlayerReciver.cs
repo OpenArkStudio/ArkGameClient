@@ -11,7 +11,7 @@ using ProtoBuf;
 using NFMsg;
 using NFCoreEx;
 
-namespace PlayerNet
+namespace PlayerNetClient
 {
 	public class PlayerReciver
 	{

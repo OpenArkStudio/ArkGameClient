@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace PlayerNet
+namespace PlayerNetClient
 {
 
 public class PlayerNet 

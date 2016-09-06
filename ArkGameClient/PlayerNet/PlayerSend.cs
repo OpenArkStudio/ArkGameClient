@@ -13,7 +13,7 @@ using NFTCPClient;
 using NFMsg;
 using NFCoreEx;
 
-namespace PlayerNet
+namespace PlayerNetClient
 {
    
 public class PlayerSend 

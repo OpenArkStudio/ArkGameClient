@@ -46,27 +46,27 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dependency\ArkClient_Core\NFCoreEx.csproj">
+    <ProjectReference Include="..\..\ArkClient_Core\NFCoreEx.csproj">
       <Project>{fa92ed5f-6c15-4829-a3b5-278e088d09f9}</Project>
       <Name>NFCoreEx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Dependency\ArkClient_Net\NFNet.csproj">
+    <ProjectReference Include="..\..\ArkClient_Net\NFNet.csproj">
       <Project>{e615a80a-b280-4e0a-8d6c-20d63a860886}</Project>
       <Name>NFNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ArkDependency\protobuf-net\protobuf-net.csproj">
+      <Project>{e91c373f-ee5e-415c-9255-70f3d0fa7eb2}</Project>
+      <Name>protobuf-net</Name>
     </ProjectReference>
     <ProjectReference Include="..\NFMsg\NFMsg.csproj">
       <Project>{cccc1b40-7356-4a6f-b950-fdc33e92613a}</Project>
       <Name>NFMsg</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Dependency\protobuf-net\protobuf-net.csproj">
-      <Project>{e91c373f-ee5e-415c-9255-70f3d0fa7eb2}</Project>
-      <Name>protobuf-net</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(SolutionDir)\_Out\Lib\$(ProjectName).dll $(SolutionDir)\_Out\$(Configuration)\NFCClient\$(ProjectName).dll
-copy /y $(SolutionDir)\_Out\Lib\$(ProjectName).pdb $(SolutionDir)\_Out\$(Configuration)\NFCClient\$(ProjectName).pdb</PostBuildEvent>
+    <PostBuildEvent>mkdir $(SolutionDir)\_Out\$(Configuration)\Lib\
+copy /y $(TargetDir)\$(TargetName)$(TargetExt) $(SolutionDir)\_Out\$(Configuration)\Lib\$(TargetName)$(TargetExt)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

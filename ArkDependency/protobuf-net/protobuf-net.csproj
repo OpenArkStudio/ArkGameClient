@@ -128,8 +128,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(SolutionDir)\_Out\Lib\$(ProjectName).dll $(SolutionDir)\_Out\$(Configuration)\NFCClient\$(ProjectName).dll
-copy /y $(SolutionDir)\_Out\Lib\$(ProjectName).pdb $(SolutionDir)\_Out\$(Configuration)\NFCClient\$(ProjectName).pdb</PostBuildEvent>
+    <PostBuildEvent>mkdir $(SolutionDir)\_Out\$(Configuration)\Lib\
+copy /y $(TargetDir)\$(TargetName)$(TargetExt) $(SolutionDir)\_Out\$(Configuration)\Lib\$(TargetName)$(TargetExt)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

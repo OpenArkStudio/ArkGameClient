@@ -216,38 +216,6 @@ namespace NFMsg
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ChatContainer")]
-  public partial class ChatContainer : global::ProtoBuf.IExtensible
-  {
-    public ChatContainer() {}
-    
-    private int _ConTainerType;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"ConTainerType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int ConTainerType
-    {
-      get { return _ConTainerType; }
-      set { _ConTainerType = value; }
-    }
-    private byte[] _data_info;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"data_info", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public byte[] data_info
-    {
-      get { return _data_info; }
-      set { _data_info = value; }
-    }
-    [global::ProtoBuf.ProtoContract(Name=@"ContainerType")]
-    public enum ContainerType
-    {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGCT_ITEM", Value=1)]
-      EGCT_ITEM = 1
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqAckPlayerChat")]
   public partial class ReqAckPlayerChat : global::ProtoBuf.IExtensible
   {
@@ -281,21 +249,6 @@ namespace NFMsg
       get { return _chat_name; }
       set { _chat_name = value; }
     }
-    private NFMsg.Ident _target_id = null;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"target_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public NFMsg.Ident target_id
-    {
-      get { return _target_id; }
-      set { _target_id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<NFMsg.ChatContainer> _Container_data = new global::System.Collections.Generic.List<NFMsg.ChatContainer>();
-    [global::ProtoBuf.ProtoMember(6, Name=@"Container_data", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<NFMsg.ChatContainer> Container_data
-    {
-      get { return _Container_data; }
-    }
-  
     [global::ProtoBuf.ProtoContract(Name=@"EGameChatType")]
     public enum EGameChatType
     {
@@ -337,27 +290,13 @@ namespace NFMsg
       get { return _effect_value; }
       set { _effect_value = value; }
     }
-    private NFMsg.EffectData.EResultType _effect_rlt;
+    private int _effect_rlt;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"effect_rlt", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NFMsg.EffectData.EResultType effect_rlt
+    public int effect_rlt
     {
       get { return _effect_rlt; }
       set { _effect_rlt = value; }
     }
-    [global::ProtoBuf.ProtoContract(Name=@"EResultType")]
-    public enum EResultType
-    {
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EET_SUCCESS", Value=0)]
-      EET_SUCCESS = 0,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EET_FAIL", Value=1)]
-      EET_FAIL = 1,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EET_REFUSE", Value=2)]
-      EET_REFUSE = 2
-    }
-  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -881,37 +820,6 @@ namespace NFMsg
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqAckDonateGuildItem")]
-  public partial class ReqAckDonateGuildItem : global::ProtoBuf.IExtensible
-  {
-    public ReqAckDonateGuildItem() {}
-    
-    private NFMsg.Ident _guild_id;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"guild_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident guild_id
-    {
-      get { return _guild_id; }
-      set { _guild_id = value; }
-    }
-    private NFMsg.Ident _target_id;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"target_id", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident target_id
-    {
-      get { return _target_id; }
-      set { _target_id = value; }
-    }
-    private readonly global::System.Collections.Generic.List<NFMsg.ItemStruct> _item_list = new global::System.Collections.Generic.List<NFMsg.ItemStruct>();
-    [global::ProtoBuf.ProtoMember(3, Name=@"item_list", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<NFMsg.ItemStruct> item_list
-    {
-      get { return _item_list; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ChatInfo")]
   public partial class ChatInfo : global::ProtoBuf.IExtensible
   {
@@ -998,168 +906,6 @@ namespace NFMsg
             
       [global::ProtoBuf.ProtoEnum(Name=@"ECHATTYPE_WORLD", Value=3)]
       ECHATTYPE_WORLD = 3
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqAckCreateChatGroup")]
-  public partial class ReqAckCreateChatGroup : global::ProtoBuf.IExtensible
-  {
-    public ReqAckCreateChatGroup() {}
-    
-    private byte[] _name;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public byte[] name
-    {
-      get { return _name; }
-      set { _name = value; }
-    }
-    private NFMsg.Ident _selfid;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"selfid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident selfid
-    {
-      get { return _selfid; }
-      set { _selfid = value; }
-    }
-    private NFMsg.Ident _xChatGroupid = null;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"xChatGroupid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public NFMsg.Ident xChatGroupid
-    {
-      get { return _xChatGroupid; }
-      set { _xChatGroupid = value; }
-    }
-    private int _chatType = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"chatType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int chatType
-    {
-      get { return _chatType; }
-      set { _chatType = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqAckjoinChatGroup")]
-  public partial class ReqAckjoinChatGroup : global::ProtoBuf.IExtensible
-  {
-    public ReqAckjoinChatGroup() {}
-    
-    private NFMsg.Ident _selfid;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"selfid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident selfid
-    {
-      get { return _selfid; }
-      set { _selfid = value; }
-    }
-    private NFMsg.Ident _xChatGroupid = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"xChatGroupid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public NFMsg.Ident xChatGroupid
-    {
-      get { return _xChatGroupid; }
-      set { _xChatGroupid = value; }
-    }
-    private long _result = default(long);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"result", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(long))]
-    public long result
-    {
-      get { return _result; }
-      set { _result = value; }
-    }
-    private int _chatType = default(int);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"chatType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int chatType
-    {
-      get { return _chatType; }
-      set { _chatType = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqAckQuitChatGroup")]
-  public partial class ReqAckQuitChatGroup : global::ProtoBuf.IExtensible
-  {
-    public ReqAckQuitChatGroup() {}
-    
-    private NFMsg.Ident _selfid;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"selfid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident selfid
-    {
-      get { return _selfid; }
-      set { _selfid = value; }
-    }
-    private NFMsg.Ident _xChatGroupid = null;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"xChatGroupid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public NFMsg.Ident xChatGroupid
-    {
-      get { return _xChatGroupid; }
-      set { _xChatGroupid = value; }
-    }
-    private long _result = default(long);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"result", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(long))]
-    public long result
-    {
-      get { return _result; }
-      set { _result = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqSubscriptionChatGroup")]
-  public partial class ReqSubscriptionChatGroup : global::ProtoBuf.IExtensible
-  {
-    public ReqSubscriptionChatGroup() {}
-    
-    private NFMsg.Ident _selfid;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"selfid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident selfid
-    {
-      get { return _selfid; }
-      set { _selfid = value; }
-    }
-    private readonly global::System.Collections.Generic.List<NFMsg.Ident> _xChatGroupid = new global::System.Collections.Generic.List<NFMsg.Ident>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"xChatGroupid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<NFMsg.Ident> xChatGroupid
-    {
-      get { return _xChatGroupid; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ReqCancelSubscriptionChatGroup")]
-  public partial class ReqCancelSubscriptionChatGroup : global::ProtoBuf.IExtensible
-  {
-    public ReqCancelSubscriptionChatGroup() {}
-    
-    private NFMsg.Ident _selfid;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"selfid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public NFMsg.Ident selfid
-    {
-      get { return _selfid; }
-      set { _selfid = value; }
-    }
-    private readonly global::System.Collections.Generic.List<NFMsg.Ident> _xChatGroupid = new global::System.Collections.Generic.List<NFMsg.Ident>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"xChatGroupid", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<NFMsg.Ident> xChatGroupid
-    {
-      get { return _xChatGroupid; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

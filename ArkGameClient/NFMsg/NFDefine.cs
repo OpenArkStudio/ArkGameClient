@@ -460,30 +460,6 @@ namespace NFMsg
       [global::ProtoBuf.ProtoEnum(Name=@"EGMI_ACK_SEARCH_GUILD", Value=309)]
       EGMI_ACK_SEARCH_GUILD = 309,
             
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_REQ_CREATE_CHATGROUP", Value=400)]
-      EGEC_REQ_CREATE_CHATGROUP = 400,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_ACK_CREATE_CHATGROUP", Value=401)]
-      EGEC_ACK_CREATE_CHATGROUP = 401,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_REQ_JOIN_CHATGROUP", Value=402)]
-      EGEC_REQ_JOIN_CHATGROUP = 402,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_ACK_JOIN_CHATGROUP", Value=403)]
-      EGEC_ACK_JOIN_CHATGROUP = 403,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_REQ_LEAVE_CHATGROUP", Value=404)]
-      EGEC_REQ_LEAVE_CHATGROUP = 404,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_ACK_LEAVE_CHATGROUP", Value=405)]
-      EGEC_ACK_LEAVE_CHATGROUP = 405,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_REQ_SUBSCRIPTION_CHATGROUP", Value=406)]
-      EGEC_REQ_SUBSCRIPTION_CHATGROUP = 406,
-            
-      [global::ProtoBuf.ProtoEnum(Name=@"EGEC_REQ_CANCELSUBSCRIPTION_CHATGROUP", Value=407)]
-      EGEC_REQ_CANCELSUBSCRIPTION_CHATGROUP = 407,
-            
       [global::ProtoBuf.ProtoEnum(Name=@"EGMI_REQ_CMD_PROPERTY_INT", Value=1000)]
       EGMI_REQ_CMD_PROPERTY_INT = 1000,
             

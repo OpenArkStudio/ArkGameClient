@@ -67,13 +67,6 @@ namespace NFMsg
       get { return _server_state; }
       set { _server_state = value; }
     }
-    private int _server_type;
-    [global::ProtoBuf.ProtoMember(8, IsRequired = true, Name=@"server_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int server_type
-    {
-      get { return _server_type; }
-      set { _server_type = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

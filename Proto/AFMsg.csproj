@@ -49,11 +49,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ArkClient_Core\NFCoreEx.csproj">
+    <ProjectReference Include="..\ArkClient_Core\AFCoreEx.csproj">
       <Project>{fa92ed5f-6c15-4829-a3b5-278e088d09f9}</Project>
       <Name>NFCoreEx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ArkClient_Net\NFNet.csproj">
+    <ProjectReference Include="..\ArkClient_Net\AFNet.csproj">
       <Project>{e615a80a-b280-4e0a-8d6c-20d63a860886}</Project>
       <Name>NFNet</Name>
     </ProjectReference>

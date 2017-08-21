@@ -25,11 +25,11 @@ public class PlayerSender
         mxPlayerNet = clientnet;
     }
 
-    static public AFMsg.Ident NFToPB(AFCoreEx.AFIDENTID xID)
+    static public AFMsg.Ident AFToPB(AFCoreEx.AFIDENTID xID)
     {
         AFMsg.Ident xIdent = new AFMsg.Ident();
-        xIdent.svrid = xID.nHead64;
-        xIdent.index = xID.nData64;
+        xIdent.svrid = xID.nHead32;
+        xIdent.index = xID.nData32;
 
         return xIdent;
     }
@@ -37,7 +37,7 @@ public class PlayerSender
     private void SendMsg(AFCoreEx.AFIDENTID xID, AFMsg.EGameMsgID unMsgID, MemoryStream stream)
     {
         AFMsg.MsgBase xData = new AFMsg.MsgBase();
-        xData.player_id = NFToPB(xID);
+        xData.player_id = AFToPB(xID);
         xData.msg_data = stream.ToArray();
 
         MemoryStream body = new MemoryStream();
@@ -53,7 +53,7 @@ public class PlayerSender
     {
         if (mxPlayerNet.mbDebugMode)
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE);
             //AFCRenderInterface.Instance.LoadScene("SelectScene");
         }
         else
@@ -205,7 +205,7 @@ public class PlayerSender
 // 
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_ROLE_LIST;
-//             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckAllStream.ToArray());
 //         }
@@ -230,7 +230,7 @@ public class PlayerSender
         xData.name = UnicodeEncoding.Default.GetBytes(strRoleName);
         xData.account = UnicodeEncoding.Default.GetBytes(strAccount);
         xData.game_id = nServerID;
-        xData.id = NFToPB(objectID);
+        xData.id = AFToPB(objectID);
 
         MemoryStream stream = new MemoryStream();
         Serializer.Serialize<AFMsg.ReqEnterGameServer>(stream, xData);
@@ -293,7 +293,7 @@ public class PlayerSender
 // 
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_OBJECT_ENTRY;
-//             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckAllStream.ToArray());
 //             /////////////////////////////////////////////
@@ -319,7 +319,7 @@ public class PlayerSender
 // 
 //             MsgHead xAckPropertyhead = new MsgHead();
 //             xAckPropertyhead.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_PROPERTY_INT;
-//             xAckPropertyhead.unDataLen = (UInt32)xAckPropertyIntAllStream.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             xAckPropertyhead.unDataLen = (UInt32)xAckPropertyIntAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(xAckPropertyhead, xAckPropertyIntAllStream.ToArray());
 // 
@@ -361,7 +361,7 @@ public class PlayerSender
 // 
 //             MsgHead xNPCHead = new MsgHead();
 //             xNPCHead.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_OBJECT_ENTRY;
-//             xNPCHead.unDataLen = (UInt32)xAckAllNPCStream.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             xNPCHead.unDataLen = (UInt32)xAckAllNPCStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(xNPCHead, xAckAllNPCStream.ToArray());
 //             //////////////////////////////////////////////
@@ -382,7 +382,7 @@ public class PlayerSender
     public void RequireMove(AFCoreEx.AFIDENTID objectID, float fX, float fZ)
     {
         AFMsg.ReqAckPlayerMove xData = new AFMsg.ReqAckPlayerMove();
-        xData.mover = NFToPB(objectID);
+        xData.mover = AFToPB(objectID);
         xData.moveType = 0;
 
         AFMsg.Position xTargetPos = new AFMsg.Position();
@@ -406,7 +406,7 @@ public class PlayerSender
 // 
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_MOVE;
-//             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckBody.ToArray());
 // 
@@ -416,7 +416,7 @@ public class PlayerSender
     public void RequireMoveImmune(AFCoreEx.AFIDENTID objectID, float fX, float fZ)
     {
         AFMsg.ReqAckPlayerMove xData = new AFMsg.ReqAckPlayerMove();
-        xData.mover = NFToPB(objectID);
+        xData.mover = AFToPB(objectID);
         xData.moveType = 0;
         AFMsg.Position xTargetPos = new AFMsg.Position();
         xTargetPos.x = fX;
@@ -439,7 +439,7 @@ public class PlayerSender
 // 
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_MOVE_IMMUNE;
-//             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.NF_PACKET_HEAD_SIZE;
+//             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
 // 
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckBody.ToArray());
 // 
@@ -462,7 +462,7 @@ public class PlayerSender
         xTarPos.z = fTarZ;
 
         AFMsg.ReqAckUseSkill xData = new AFMsg.ReqAckUseSkill();
-        xData.user = NFToPB(objectID);
+        xData.user = AFToPB(objectID);
         xData.skill_id = UnicodeEncoding.Default.GetBytes(strKillID);
         xData.tar_pos = xTarPos;
         xData.now_pos = xNowPos;
@@ -471,7 +471,7 @@ public class PlayerSender
         {
             AFMsg.EffectData xEffectData = new AFMsg.EffectData();
 
-            xEffectData.effect_ident = NFToPB(nTargetID);
+            xEffectData.effect_ident = AFToPB(nTargetID);
             xEffectData.effect_value = 0;
             xEffectData.effect_rlt = 0;
             xData.effect_data.Add(xEffectData);
@@ -486,11 +486,11 @@ public class PlayerSender
     public void RequireUseItem(AFCoreEx.AFIDENTID objectID, AFCoreEx.AFIDENTID nGuid, AFCoreEx.AFIDENTID nTargetID)
     {
         AFMsg.ReqAckUseItem xData = new AFMsg.ReqAckUseItem();
-        xData.item_guid = NFToPB(nGuid);
+        xData.item_guid = AFToPB(nGuid);
 
         AFMsg.EffectData xEffectData = new AFMsg.EffectData();
 
-        xEffectData.effect_ident = NFToPB(nTargetID);
+        xEffectData.effect_ident = AFToPB(nTargetID);
         xEffectData.effect_rlt = 0;
         xEffectData.effect_value = 0;
 
@@ -505,7 +505,7 @@ public class PlayerSender
     public void RequireChat(AFCoreEx.AFIDENTID objectID, AFCoreEx.AFIDENTID targetID, int nType, string strData)
     {
         AFMsg.ReqAckPlayerChat xData = new AFMsg.ReqAckPlayerChat();
-        xData.chat_id = NFToPB(targetID);
+        xData.chat_id = AFToPB(targetID);
         xData.chat_type = (AFMsg.ReqAckPlayerChat.EGameChatType)nType;
         xData.chat_info = UnicodeEncoding.Default.GetBytes(strData);
 
@@ -532,7 +532,7 @@ public class PlayerSender
     public void RequireProperty(AFCoreEx.AFIDENTID objectID, string strPropertyName, int nValue)
     {
         AFMsg.ReqCommand xData = new AFMsg.ReqCommand();
-        xData.control_id = NFToPB(objectID);
+        xData.control_id = AFToPB(objectID);
         xData.command_id = ReqCommand.EGameCommandType.EGCT_MODIY_PROPERTY;
         xData.command_str_value = UnicodeEncoding.Default.GetBytes(strPropertyName);
         xData.command_value_int = nValue;
@@ -546,7 +546,7 @@ public class PlayerSender
     public void RequireItem(AFCoreEx.AFIDENTID objectID, string strItemName, int nCount)
     {
         AFMsg.ReqCommand xData = new AFMsg.ReqCommand();
-        xData.control_id = NFToPB(objectID);
+        xData.control_id = AFToPB(objectID);
         xData.command_id = ReqCommand.EGameCommandType.EGCT_MODIY_ITEM;
         xData.command_str_value = UnicodeEncoding.Default.GetBytes(strItemName);
         xData.command_value_int = nCount;
@@ -582,7 +582,7 @@ public class PlayerSender
     public void RequirePickUpItem(AFCoreEx.AFIDENTID objectID, AFCoreEx.AFIDENTID nItemID)
     {
         AFMsg.ReqPickDropItem xData = new AFMsg.ReqPickDropItem();
-        xData.item_guid = NFToPB(nItemID);
+        xData.item_guid = AFToPB(nItemID);
 
         MemoryStream stream = new MemoryStream();
         Serializer.Serialize<AFMsg.ReqPickDropItem>(stream, xData);
@@ -608,7 +608,7 @@ public class PlayerSender
     public void RequireProductionNPC(AFCoreEx.AFIDENTID objectID, AFCoreEx.AFIDENTID buildingID, string strItemID, int nCount)
     {
         AFMsg.ReqCreateItem xData = new AFMsg.ReqCreateItem();
-        xData.object_guid = NFToPB(buildingID);
+        xData.object_guid = AFToPB(buildingID);
         xData.config_id = strItemID;
         xData.count = nCount;
 
@@ -622,7 +622,7 @@ public class PlayerSender
     public void RequireLvlUpBuilding(AFCoreEx.AFIDENTID objectID, AFCoreEx.AFIDENTID buildingID)
     {
         AFMsg.ReqUpBuildLv xData = new AFMsg.ReqUpBuildLv();
-        xData.object_guid = NFToPB(buildingID);
+        xData.object_guid = AFToPB(buildingID);
 
 
 
@@ -636,7 +636,7 @@ public class PlayerSender
     {
         //申请移动
         AFMsg.ReqAckMoveBuildObject xData = new AFMsg.ReqAckMoveBuildObject();
-        xData.object_guid = PlayerSender.NFToPB((AFCoreEx.AFIDENTID)buildingID);
+        xData.object_guid = PlayerSender.AFToPB((AFCoreEx.AFIDENTID)buildingID);
         xData.x = fx;
         xData.y = fy;
         xData.z = fz;
@@ -650,7 +650,7 @@ public class PlayerSender
     public void RequireBuildingOperate(AFCoreEx.AFIDENTID objectID, AFMsg.ESLGFuncType eFunc, AFCoreEx.AFIDENTID buildingID)
     {
         AFMsg.ReqBuildOperate xData = new AFMsg.ReqBuildOperate();
-        xData.object_guid = NFToPB(buildingID);
+        xData.object_guid = AFToPB(buildingID);
         xData.functype = eFunc;
 
 

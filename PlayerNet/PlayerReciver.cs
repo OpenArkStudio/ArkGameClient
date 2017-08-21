@@ -34,8 +34,8 @@ namespace PlayerNetClient
         static public AFCoreEx.AFIDENTID PBToAF(AFMsg.Ident xID)
         {
             AFCoreEx.AFIDENTID xIdent = new AFCoreEx.AFIDENTID();
-            xIdent.nHead64 = xID.svrid;
-            xIdent.nData64 = xID.index;
+            xIdent.nHead32 = xID.svrid;
+            xIdent.nData32 = xID.index;
 
             return xIdent;
         }
@@ -43,8 +43,64 @@ namespace PlayerNetClient
         static public AFCoreEx.AFIDataList.Var_Data PBPropertyToData(AFMsg.PropertyPBData xProperty)
         {
             AFCoreEx.AFIDataList.Var_Data xData = new AFCoreEx.AFIDataList.Var_Data();
+            xData.nType  = (AFIDataList.VARIANT_TYPE)xProperty.ndataType;
+            switch((AFIDataList.VARIANT_TYPE)xProperty.ndataType)
+            {
+                case AFIDataList.VARIANT_TYPE.VTYPE_BOOLEAN:
+                    {
+                        xData.mData = xProperty.mbValue;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_INT:
+                    {
+                        xData.mData = xProperty.mnValue;
+                    }
+                    break;
 
-            
+                case AFIDataList.VARIANT_TYPE.VTYPE_INT64:
+                    {
+                        xData.mData = xProperty.mn64Value;
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
+                    {
+                        xData.mData = xProperty.mfValue;
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
+                    {
+                        xData.mData = xProperty.mdValue;
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
+                    {
+                        xData.mData = xProperty.mstrValue;
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
+                    {
+                        
+                        xData.mData = PBToAF(xProperty.mGuid);
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_POINTER:
+                    {
+                        
+                    }
+                    break;
+
+                case AFIDataList.VARIANT_TYPE.VTYPE_USERDATA:
+                    { }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_TABLE:
+                    { }
+                    break;
+            }
             return xData;
         }
 
@@ -53,22 +109,68 @@ namespace PlayerNetClient
             AFCoreEx.AFIDataList.Var_Data xData = new AFCoreEx.AFIDataList.Var_Data();
             nRow = xPbrecord.row;
             col = xPbrecord.col;
+            switch ((AFIDataList.VARIANT_TYPE)xPbrecord.ndataType)
+            {
+                case AFIDataList.VARIANT_TYPE.VTYPE_BOOLEAN:
+                    {
+                        xData.mData = xPbrecord.mbValue;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_INT:
+                    {
+                        xData.mData = xPbrecord.mnValue;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_INT64:
+                    {
+                        xData.mData = xPbrecord.mn64Value;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
+                    {
+                        xData.mData = xPbrecord.mfValue;
+                    }
+                    break;
 
+                case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
+                    {
+                        xData.mData = xPbrecord.mdValue;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
+                    {
+                        xData.mData = xPbrecord.mstrValue;
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
+                    {
+                        xData.mData = PBToAF(xPbrecord.mGuid);
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_POINTER:
+                    {
 
+                    }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_USERDATA:
+                    { }
+                    break;
+                case AFIDataList.VARIANT_TYPE.VTYPE_TABLE:
+                    { }
+                    break;
+            }
             return xData;
         }
 
-
         public  void OnDisConnect()
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_DISCOUNT;
+            
         }
 
         public  void OnConnect()
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN;
-        }
 
+        }
 		public void Init() 
 		{
 
@@ -102,7 +204,6 @@ namespace PlayerNetClient
 
             mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EGMI_ACK_SKILL_OBJECTX, EGMI_ACK_SKILL_OBJECTX);
             mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EGMI_ACK_CHAT, EGMI_ACK_CHAT);
-            
 		}
 
         private void EGMI_EVENT_RESULT(MsgHead head, MemoryStream stream)
@@ -125,13 +226,7 @@ namespace PlayerNetClient
 
             if (EGameEventCode.EGEC_ACCOUNT_SUCCESS == xData.event_code)
             {
-                mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN;
-
-                PlayerSender sender = mxPlayerNet.mxSender;
-                if (null != sender)
-                {
-                    sender.RequireWorldList();
-                }
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_LOGIN_SUCCESSFUL);    
             }
         }
 
@@ -160,7 +255,7 @@ namespace PlayerNetClient
                 }
             }
 
-            AFCLogicEvent.Instance.DoEvent((int)ClientEventDefine.EVENTDEFINE_SHOWWORLDLIST, new AFCDataList());
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
         }
 
         private void EGMI_ACK_CONNECT_WORLD(MsgHead head, MemoryStream stream)
@@ -174,10 +269,10 @@ namespace PlayerNetClient
             xData = Serializer.Deserialize<AFMsg.AckConnectWorldResult>(new MemoryStream(xMsg.msg_data));
 
             ///
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_TO_GATE;
             mxPlayerNet.strKey = System.Text.Encoding.Default.GetString(xData.world_key);
             mxPlayerNet.strWorldIP = System.Text.Encoding.Default.GetString(xData.world_ip);
             mxPlayerNet.nWorldPort = xData.world_port;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_GET_WORLD_KEY_SUCCESSFUL);
         }
 
         private void EGMI_ACK_CONNECT_KEY(MsgHead head, MemoryStream stream)
@@ -191,7 +286,7 @@ namespace PlayerNetClient
             if (xData.event_code == EGameEventCode.EGEC_VERIFY_KEY_SUCCESS)
             {
                 //验证成功
-                mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_VERIFY;
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_VERIFY_KEY_SUCCESS_FULL);
                 mxPlayerNet.nMainRoleID = PBToAF(xData.event_object);
 
                 //申请世界内的服务器列表
@@ -236,22 +331,20 @@ namespace PlayerNetClient
                 aCharList.Add(info);
             }
 
-            if (PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST != mxPlayerNet.mPlayerState)
+            if (PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE != mxPlayerNet.GetPlayerState())
             {
-                //AFCRenderInterface.Instance.LoadScene("SelectScene");
 
                 AFCDataList varList = new AFCDataList();
                 varList.AddString("SelectScene");
                 AFCLogicEvent.Instance.DoEvent((int)ClientEventDefine.EventDefine_LoadSelectRole, varList);
             }
 
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_GETROLELIST_SUCCESSFUL);
         }
 
         private void EGMI_ACK_SWAP_SCENE(MsgHead head, MemoryStream stream)
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING;
-
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING);
             AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
             xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
 
@@ -261,7 +354,7 @@ namespace PlayerNetClient
             //AFCRenderInterface.Instance.LoadScene(xData.scene_id, xData.x, xData.y, xData.z);
 
             AFCDataList varList = new AFCDataList();
-            varList.AddInt(xData.scene_id);
+            varList.AddInt64(xData.scene_id);
             varList.AddFloat(xData.x);
             varList.AddFloat(xData.y);
             varList.AddFloat(xData.z);
@@ -712,8 +805,8 @@ namespace PlayerNetClient
             for (int i = 0; i < xReqAckUseSkill.effect_data.Count; ++i )
             {
                 xObjectList.AddObject(PBToAF(xReqAckUseSkill.effect_data[i].effect_ident));
-                xRtlList.AddInt((int)xReqAckUseSkill.effect_data[i].effect_rlt);
-                xValueList.AddInt((int)xReqAckUseSkill.effect_data[i].effect_value);
+                xRtlList.AddInt64((int)xReqAckUseSkill.effect_data[i].effect_rlt);
+                xValueList.AddInt64((int)xReqAckUseSkill.effect_data[i].effect_value);
             }
             
 
@@ -732,7 +825,7 @@ namespace PlayerNetClient
                 return;
             }
 
-            varList.AddInt(xObjectList.Count());
+            varList.AddInt64(xObjectList.Count());
             for (int i = 0; i < xObjectList.Count(); ++i)
             {
                 varList.AddObject(xObjectList.ObjectVal(i));
@@ -740,12 +833,12 @@ namespace PlayerNetClient
 
             for (int i = 0; i < xRtlList.Count(); ++i)
             {
-                varList.AddInt(xRtlList.IntVal(i));
+                varList.AddInt64(xRtlList.Int64Val(i));
             }
 
             for (int i = 0; i < xValueList.Count(); ++i)
             {
-                varList.AddInt(xValueList.IntVal(i));
+                varList.AddInt64(xValueList.Int64Val(i));
             }
 
 

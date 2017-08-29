@@ -45,7 +45,9 @@ public class PlayerNet
     {
         mxReciver = new PlayerReciver(this);
         mxSender = new PlayerSender(this);
-        mxNet = new AFNet();
+        mxNet = new AFCNet();
+
+        mxReciver.Init();
     }
         public delegate void StateChangeDelegation(PLAYER_STATE oldState, PLAYER_STATE newState);
         public bool RegisteredPlayerStateChangeDelegation(StateChangeDelegation msgDelegate)
@@ -74,7 +76,11 @@ public class PlayerNet
                 return false;
             }
 
-            mxStateChangeDelegation(mPlayerState, xNewState);
+            if (null != mxStateChangeDelegation)
+            {
+                mxStateChangeDelegation(mPlayerState, xNewState);
+            }
+
             mPlayerState = xNewState;
             return true;
         }
@@ -120,7 +126,7 @@ public class PlayerNet
     public Int64 nSceneID = 0;
     public Int64 nLineID = 0;
 
-    public AFNet mxNet = null;
+    public AFCNet mxNet = null;
     public PlayerReciver mxReciver =  null;
     public PlayerSender mxSender = null;
     private StateChangeDelegation mxStateChangeDelegation = null;

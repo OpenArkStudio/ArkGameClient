@@ -245,6 +245,7 @@ namespace PlayerNetClient
                     ServerInfo info = xData.info[i];
                     aWorldList.Add(info);
                 }
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
             }
             else if (ReqServerListType.RSLT_GAMES_ERVER == xData.type)
             {
@@ -254,8 +255,6 @@ namespace PlayerNetClient
                     aServerList.Add(info);
                 }
             }
-
-            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
         }
 
         private void EGMI_ACK_CONNECT_WORLD(MsgHead head, MemoryStream stream)

@@ -131,5 +131,10 @@ public class PlayerNet
     public PlayerSender mxSender = null;
     private StateChangeDelegation mxStateChangeDelegation = null;
     private PLAYER_STATE mPlayerState = PLAYER_STATE.E_NONE;
+
+    public ArrayList aWorldList = new ArrayList();
+    public ArrayList aServerList = new ArrayList();
+    public ArrayList aCharList = new ArrayList(); 
+    public ArrayList aChatMsgList = new ArrayList();
     }
 }

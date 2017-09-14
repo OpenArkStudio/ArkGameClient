@@ -15,12 +15,6 @@ namespace PlayerNetClient
 {
 	public class PlayerReciver
 	{
-        public ArrayList aWorldList = new ArrayList();
-        public ArrayList aServerList = new ArrayList();
-        public ArrayList aCharList = new ArrayList();
-
-        public ArrayList aChatMsgList = new ArrayList();
-
         public PlayerNet mxPlayerNet ;
         public PlayerReciver(PlayerNet xPlayerNet)
         {
@@ -243,7 +237,7 @@ namespace PlayerNetClient
                 for(int i = 0; i < xData.info.Count; ++i)
                 {
                     ServerInfo info = xData.info[i];
-                    aWorldList.Add(info);
+                    mxPlayerNet.aWorldList.Add(info);
                 }
                 mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
             }
@@ -252,7 +246,7 @@ namespace PlayerNetClient
                 for (int i = 0; i < xData.info.Count; ++i)
                 {
                     ServerInfo info = xData.info[i];
-                    aServerList.Add(info);
+                    mxPlayerNet.aServerList.Add(info);
                 }
             }
         }
@@ -323,11 +317,11 @@ namespace PlayerNetClient
             AFMsg.AckRoleLiteInfoList xData = new AFMsg.AckRoleLiteInfoList();
             xData = Serializer.Deserialize<AFMsg.AckRoleLiteInfoList>(new MemoryStream(xMsg.msg_data));
             
-            aCharList.Clear();
+            mxPlayerNet.aCharList.Clear();
             for (int i = 0; i < xData.char_data.Count; ++i)
             {
                 AFMsg.RoleLiteInfo info = xData.char_data[i];
-                aCharList.Add(info);
+                mxPlayerNet.aCharList.Add(info);
             }
 
             if (PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE != mxPlayerNet.GetPlayerState())
@@ -854,7 +848,7 @@ namespace PlayerNetClient
             AFMsg.ReqAckPlayerChat xReqAckChat = new AFMsg.ReqAckPlayerChat();
             xReqAckChat = Serializer.Deserialize<AFMsg.ReqAckPlayerChat>(new MemoryStream(xMsg.msg_data));
 
-            aChatMsgList.Add(PBToAF(xReqAckChat.chat_id).ToString() + ":" + System.Text.Encoding.Default.GetString(xReqAckChat.chat_info));
+            mxPlayerNet.aChatMsgList.Add(PBToAF(xReqAckChat.chat_id).ToString() + ":" + System.Text.Encoding.Default.GetString(xReqAckChat.chat_info));
         }
     }
 

@@ -36,18 +36,20 @@ public class PlayerSender
 
     private void SendMsg(AFCoreEx.AFIDENTID xID, AFMsg.EGameMsgID unMsgID, MemoryStream stream)
     {
-        AFMsg.MsgBase xData = new AFMsg.MsgBase();
-        xData.player_id = AFToPB(xID);
-        xData.msg_data = stream.ToArray();
-
-        MemoryStream body = new MemoryStream();
-        Serializer.Serialize<AFMsg.MsgBase>(body, xData);
-
-        byte[] bodyByte = body.ToArray();
-
-        mxPlayerNet.mxNet.SendMsg((int)unMsgID, bodyByte);
+        MsgHead head = new MsgHead();
+        head.unMsgID = (UInt16)unMsgID;
+        head.nHead32 = xID.nHead32;
+        head.nData32 = xID.nData32;
+        mxPlayerNet.mxNet.SendMsg(head, stream.ToArray() );
     }
 
+    public void SendMsg<T>(AFCoreEx.AFIDENTID xID, AFMsg.EGameMsgID unMsgID, T xData)
+    {
+            MemoryStream stream = new MemoryStream();
+            Serializer.Serialize<T>(stream, xData);
+
+            SendMsg(xID, unMsgID, stream);
+    }
 
     public void LoginPB(string strAccount, string strPassword, string strSessionKey)
     {
@@ -70,10 +72,7 @@ public class PlayerSender
             xData.device_info = System.Text.Encoding.Default.GetBytes("");
             xData.extra_info = System.Text.Encoding.Default.GetBytes("");
 
-            MemoryStream stream = new MemoryStream();
-            Serializer.Serialize<AFMsg.ReqAccountLogin>(stream, xData);
-
-            SendMsg(new AFCoreEx.AFIDENTID(), AFMsg.EGameMsgID.EGMI_REQ_LOGIN, stream);
+            SendMsg(new AFCoreEx.AFIDENTID(), AFMsg.EGameMsgID.EGMI_REQ_LOGIN, xData);
         }
     }
 

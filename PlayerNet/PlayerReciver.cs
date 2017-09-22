@@ -200,11 +200,20 @@ namespace PlayerNetClient
             mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EGMI_ACK_CHAT, EGMI_ACK_CHAT);
 		}
 
+        private void ReceiveMsg<T>(MemoryStream stream, ref T xData)
+        {
+            xData = Serializer.Deserialize<T>(stream);
+            if (null == xData)
+            {
+                return ;
+            }
+        }
+
         private void EGMI_EVENT_RESULT(MsgHead head, MemoryStream stream)
         {
             //OnResultMsg
             AFMsg.AckEventResult xResultCode = new AFMsg.AckEventResult();
-            xResultCode = Serializer.Deserialize<AFMsg.AckEventResult>(stream);
+            ReceiveMsg(stream, ref xResultCode);
             AFMsg.EGameEventCode eEvent = xResultCode.event_code;
 
             mxPlayerNet.mxNet.DoResultCodeDelegation((int)eEvent);
@@ -212,11 +221,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_LOGIN(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckEventResult xData = new AFMsg.AckEventResult();
-            xData = Serializer.Deserialize<AFMsg.AckEventResult>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             if (EGameEventCode.EGEC_ACCOUNT_SUCCESS == xData.event_code)
             {
@@ -226,11 +232,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_WORLD_LIST(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckServerList xData = new AFMsg.AckServerList();
-            xData = Serializer.Deserialize<AFMsg.AckServerList>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             if (ReqServerListType.RSLT_WORLD_SERVER == xData.type)
             {
@@ -255,13 +258,9 @@ namespace PlayerNetClient
         {
             mxPlayerNet.mxNet.Disconnect();
 
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckConnectWorldResult xData = new AFMsg.AckConnectWorldResult();
-            xData = Serializer.Deserialize<AFMsg.AckConnectWorldResult>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
-            ///
             mxPlayerNet.strKey = System.Text.Encoding.Default.GetString(xData.world_key);
             mxPlayerNet.strWorldIP = System.Text.Encoding.Default.GetString(xData.world_ip);
             mxPlayerNet.nWorldPort = xData.world_port;
@@ -270,11 +269,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_CONNECT_KEY(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckEventResult xData = new AFMsg.AckEventResult();
-            xData = Serializer.Deserialize<AFMsg.AckEventResult>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             if (xData.event_code == EGameEventCode.EGEC_VERIFY_KEY_SUCCESS)
             {
@@ -293,11 +289,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_SELECT_SERVER(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckEventResult xData = new AFMsg.AckEventResult();
-            xData = Serializer.Deserialize<AFMsg.AckEventResult>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             if (xData.event_code == EGameEventCode.EGEC_SELECTSERVER_SUCCESS)
             {
@@ -311,12 +304,9 @@ namespace PlayerNetClient
         
         private void EGMI_ACK_ROLE_LIST(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckRoleLiteInfoList xData = new AFMsg.AckRoleLiteInfoList();
-            xData = Serializer.Deserialize<AFMsg.AckRoleLiteInfoList>(new MemoryStream(xMsg.msg_data));
-            
+            ReceiveMsg(stream, ref xData);
+
             mxPlayerNet.aCharList.Clear();
             for (int i = 0; i < xData.char_data.Count; ++i)
             {
@@ -338,11 +328,9 @@ namespace PlayerNetClient
         private void EGMI_ACK_SWAP_SCENE(MsgHead head, MemoryStream stream)
         {
             mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING);
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
 
             AFMsg.ReqAckSwapScene xData = new AFMsg.ReqAckSwapScene();
-            xData = Serializer.Deserialize<AFMsg.ReqAckSwapScene>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             //AFCRenderInterface.Instance.LoadScene(xData.scene_id, xData.x, xData.y, xData.z);
 
@@ -357,11 +345,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_OBJECT_ENTRY(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckPlayerEntryList xData = new AFMsg.AckPlayerEntryList();
-            xData = Serializer.Deserialize<AFMsg.AckPlayerEntryList>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             for (int i = 0; i < xData.object_list.Count; ++i)
             {
@@ -384,11 +369,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_OBJECT_LEAVE(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.AckPlayerLeaveList xData = new AFMsg.AckPlayerLeaveList();
-            xData = Serializer.Deserialize<AFMsg.AckPlayerLeaveList>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
 
             for (int i = 0; i < xData.object_list.Count; ++i)
             {
@@ -398,11 +380,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_MOVE(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.ReqAckPlayerMove xData = new AFMsg.ReqAckPlayerMove();
-            xData = Serializer.Deserialize<AFMsg.ReqAckPlayerMove>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
             if (xData.target_pos.Count <= 0)
             {
                 return;
@@ -423,11 +402,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_MOVE_IMMUNE(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.ReqAckPlayerMove xData = new AFMsg.ReqAckPlayerMove();
-            xData = Serializer.Deserialize<AFMsg.ReqAckPlayerMove>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xData);
             if (xData.target_pos.Count <= 0)
             {
                 return;
@@ -452,11 +428,8 @@ namespace PlayerNetClient
         /////////////////////////////////////////////////////////////////////
         private void EGMI_ACK_PROPERTY_DATA(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
 			AFMsg.ObjectPropertyPBData propertyData = new AFMsg.ObjectPropertyPBData();
-            propertyData = Serializer.Deserialize<AFMsg.ObjectPropertyPBData>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref propertyData);
 
             AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.player_id));
             AFIPropertyManager propertyManager = go.GetPropertyManager();
@@ -478,91 +451,10 @@ namespace PlayerNetClient
 			}
 		}
 		
-        //private void EGMI_ACK_PROPERTY_FLOAT(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectPropertyFloat propertyData = new AFMsg.ObjectPropertyFloat();
-        //    propertyData = Serializer.Deserialize<AFMsg.ObjectPropertyFloat>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.player_id));
-			
-        //    for(int i = 0; i < propertyData.property_list.Count; i++)
-        //    {
-        //        AFIPropertyManager propertyManager = go.GetPropertyManager();
-        //        AFIProperty property = propertyManager.GetProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name));
-        //        if (null == property)
-        //        {
-        //            AFIDataList varList = new AFCDataList();
-        //            varList.AddFloat(0.0f);
-
-        //            property = propertyManager.AddProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name), varList);
-        //        }
-
-        //        property.SetFloat(propertyData.property_list[i].data);
-        //    }
-        //}
-		
-        //private void EGMI_ACK_PROPERTY_STRING(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectPropertyString propertyData = new AFMsg.ObjectPropertyString();
-        //    propertyData = Serializer.Deserialize<AFMsg.ObjectPropertyString>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.player_id));
-
-        //    for(int i = 0; i < propertyData.property_list.Count; i++)
-        //    {
-        //        AFIPropertyManager propertyManager = go.GetPropertyManager();
-        //        AFIProperty property = propertyManager.GetProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name));
-        //        if (null == property)
-        //        {
-        //            AFIDataList varList = new AFCDataList();
-        //            varList.AddString("");
-
-        //            property = propertyManager.AddProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name), varList);
-        //        }
-
-        //        property.SetString(System.Text.Encoding.Default.GetString(propertyData.property_list[i].data));
-        //    }
-        //}
-		
-        //private void EGMI_ACK_PROPERTY_OBJECT(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectPropertyObject propertyData = new AFMsg.ObjectPropertyObject();
-        //    propertyData = Serializer.Deserialize<AFMsg.ObjectPropertyObject>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.player_id));
-			
-        //    for(int i = 0; i < propertyData.property_list.Count; i++)
-        //    {
-        //        AFIPropertyManager propertyManager = go.GetPropertyManager();
-        //        AFIProperty property = propertyManager.GetProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name));
-        //        if (null == property)
-        //        {
-        //            AFIDataList varList = new AFCDataList();
-        //            varList.AddObject(new AFIDENTID());
-
-        //            property = propertyManager.AddProperty(System.Text.Encoding.Default.GetString(propertyData.property_list[i].property_name), varList);
-        //        }
-
-        //        property.SetObject(PBToAF(propertyData.property_list[i].data));
-        //    }
-        //}
-		
 		private void EGMI_ACK_RECORD_DATA(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
 			AFMsg.ObjectRecordPBData recordData = new AFMsg.ObjectRecordPBData();
-            recordData = Serializer.Deserialize<AFMsg.ObjectRecordPBData>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref recordData);
 
             AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
             AFIRecordManager recordManager = go.GetRecordManager();
@@ -577,68 +469,10 @@ namespace PlayerNetClient
             }
 		}
 		
-        //private void EGMI_ACK_RECORD_FLOAT(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectRecordFloat recordData = new AFMsg.ObjectRecordFloat();
-        //    recordData = Serializer.Deserialize<AFMsg.ObjectRecordFloat>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
-        //    AFIRecordManager recordManager = go.GetRecordManager();
-        //    AFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
-
-        //    for (int i = 0; i < recordData.property_list.Count; i++)
-        //    {
-        //        record.SetFloat(recordData.property_list[i].row, recordData.property_list[i].col, (float)recordData.property_list[i].data);
-        //    }
-        //}
-		
-        //private void EGMI_ACK_RECORD_STRING(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectRecordString recordData = new AFMsg.ObjectRecordString();
-        //    recordData = Serializer.Deserialize<AFMsg.ObjectRecordString>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
-        //    AFIRecordManager recordManager = go.GetRecordManager();
-        //    AFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
-
-        //    for (int i = 0; i < recordData.property_list.Count; i++)
-        //    {
-        //        record.SetString(recordData.property_list[i].row, recordData.property_list[i].col, System.Text.Encoding.Default.GetString(recordData.property_list[i].data));
-        //    }
-        //}
-		
-        //private void EGMI_ACK_RECORD_OBJECT(MsgHead head, MemoryStream stream)
-        //{
-        //    AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-        //    xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
-        //    AFMsg.ObjectRecordObject recordData = new AFMsg.ObjectRecordObject();
-        //    recordData = Serializer.Deserialize<AFMsg.ObjectRecordObject>(new MemoryStream(xMsg.msg_data));
-
-        //    AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
-        //    AFIRecordManager recordManager = go.GetRecordManager();
-        //    AFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
-
-
-        //    for (int i = 0; i < recordData.property_list.Count; i++)
-        //    {
-        //        record.SetObject(recordData.property_list[i].row, recordData.property_list[i].col, PBToAF(recordData.property_list[i].data));
-        //    }
-        //}
-		
 		private void EGMI_ACK_SWAP_ROW(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
 			AFMsg.ObjectRecordSwap recordData = new AFMsg.ObjectRecordSwap();
-            recordData = Serializer.Deserialize<AFMsg.ObjectRecordSwap>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref recordData);
 
             AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
             AFIRecordManager recordManager = go.GetRecordManager();
@@ -685,11 +519,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_ADD_ROW(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
 			AFMsg.ObjectRecordAddRow recordData = new AFMsg.ObjectRecordAddRow();
-            recordData = Serializer.Deserialize<AFMsg.ObjectRecordAddRow>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref recordData);
 
             AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
             AFIRecordManager recordManager = go.GetRecordManager();
@@ -702,11 +533,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_REMOVE_ROW(MsgHead head, MemoryStream stream)
 		{
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
 			AFMsg.ObjectRecordRemove recordData = new AFMsg.ObjectRecordRemove();
-            recordData = Serializer.Deserialize<AFMsg.ObjectRecordRemove>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref recordData);
 
             AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.player_id));
             AFIRecordManager recordManager = go.GetRecordManager();
@@ -720,11 +548,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_OBJECT_RECORD_ENTRY(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.MultiObjectRecordList xMultiObjectRecordData = new AFMsg.MultiObjectRecordList();
-            xMultiObjectRecordData = Serializer.Deserialize<AFMsg.MultiObjectRecordList>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xMultiObjectRecordData);
 
             for (int i = 0; i < xMultiObjectRecordData.multi_player_record.Count; i++)
             {
@@ -744,11 +569,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_OBJECT_PROPERTY_ENTRY(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.MultiObjectPropertyList xMultiObjectPropertyList = new AFMsg.MultiObjectPropertyList();
-            xMultiObjectPropertyList = Serializer.Deserialize<AFMsg.MultiObjectPropertyList>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xMultiObjectPropertyList);
 
             for (int i = 0; i < xMultiObjectPropertyList.multi_player_property.Count; i++)
             {
@@ -778,11 +600,8 @@ namespace PlayerNetClient
         //////////////////////////////////
         private void EGMI_ACK_SKILL_OBJECTX(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.ReqAckUseSkill xReqAckUseSkill = new AFMsg.ReqAckUseSkill();
-            xReqAckUseSkill = Serializer.Deserialize<AFMsg.ReqAckUseSkill>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xReqAckUseSkill);
             AFMsg.Position xNowPos = xReqAckUseSkill.now_pos;
             AFMsg.Position xTarPos = xReqAckUseSkill.tar_pos;
 
@@ -842,11 +661,8 @@ namespace PlayerNetClient
 
         private void EGMI_ACK_CHAT(MsgHead head, MemoryStream stream)
         {
-            AFMsg.MsgBase xMsg = new AFMsg.MsgBase();
-            xMsg = Serializer.Deserialize<AFMsg.MsgBase>(stream);
-
             AFMsg.ReqAckPlayerChat xReqAckChat = new AFMsg.ReqAckPlayerChat();
-            xReqAckChat = Serializer.Deserialize<AFMsg.ReqAckPlayerChat>(new MemoryStream(xMsg.msg_data));
+            ReceiveMsg(stream, ref xReqAckChat);
 
             mxPlayerNet.aChatMsgList.Add(PBToAF(xReqAckChat.chat_id).ToString() + ":" + System.Text.Encoding.Default.GetString(xReqAckChat.chat_info));
         }

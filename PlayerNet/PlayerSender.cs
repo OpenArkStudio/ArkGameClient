@@ -15,8 +15,8 @@ using AFCoreEx;
 
 namespace PlayerNetClient
 {
-   
-public class PlayerSender 
+
+public class PlayerSender
 {
     PlayerNet mxPlayerNet = null;
 
@@ -28,8 +28,8 @@ public class PlayerSender
     static public AFMsg.Ident AFToPB(AFCoreEx.AFIDENTID xID)
     {
         AFMsg.Ident xIdent = new AFMsg.Ident();
-        xIdent.svrid = xID.nHead32;
-        xIdent.index = xID.nData32;
+        xIdent.high = xID.nHead64;
+        xIdent.low = xID.nData64;
 
         return xIdent;
     }
@@ -38,22 +38,22 @@ public class PlayerSender
     {
         MsgHead head = new MsgHead();
         head.unMsgID = (UInt16)unMsgID;
-        head.nHead32 = xID.nHead32;
-        head.nData32 = xID.nData32;
-        mxPlayerNet.mxNet.SendMsg(head, stream.ToArray() );
+        head.nHead64 = xID.nHead64;
+        head.nData64 = xID.nData64;
+        mxPlayerNet.mxNet.SendMsg(head, stream.ToArray());
     }
 
     public void SendMsg<T>(AFCoreEx.AFIDENTID xID, AFMsg.EGameMsgID unMsgID, T xData)
     {
-            MemoryStream stream = new MemoryStream();
-            Serializer.Serialize<T>(stream, xData);
+        MemoryStream stream = new MemoryStream();
+        Serializer.Serialize<T>(stream, xData);
 
-            SendMsg(xID, unMsgID, stream);
+        SendMsg(xID, unMsgID, stream);
     }
 
     public void LoginPB(string strAccount, string strPassword, string strSessionKey)
     {
-        if (mxPlayerNet.mbDebugMode)
+        if(mxPlayerNet.mbDebugMode)
         {
             mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE);
             //AFCRenderInterface.Instance.LoadScene("SelectScene");
@@ -154,7 +154,7 @@ public class PlayerSender
 
     public void RequireCreateRole(string strAccount, string strRoleName, int byCareer, int bySex, int nGameID)
     {
-        if (strRoleName.Length >= 20 || strRoleName.Length < 1)
+        if(strRoleName.Length >= 20 || strRoleName.Length < 1)
         {
             return;
         }
@@ -176,7 +176,7 @@ public class PlayerSender
 //         {
 //             AFMsg.AckRoleLiteInfoList xAckBodyData = new AFMsg.AckRoleLiteInfoList();
 //             AFMsg.RoleLiteInfo info = new AFMsg.RoleLiteInfo();
-// 
+//
 //             info.career = byCareer;
 //             info.sex = bySex;
 //             info.noob_name = xData.noob_name;
@@ -191,21 +191,21 @@ public class PlayerSender
 //             info.last_offline_time = 1;
 //             info.last_offline_ip = 1;
 //             xAckBodyData.char_data.Add(info);
-// 
+//
 //             MemoryStream xAckBodyStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.AckRoleLiteInfoList>(xAckBodyStream, xAckBodyData);
-// 
+//
 //             AFMsg.MsgBase xAckData = new AFMsg.MsgBase();
 //             xAckData.player_id = info.id;
 //             xAckData.msg_data = xAckBodyStream.ToArray();
-// 
+//
 //             MemoryStream xAckAllStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckAllStream, xAckData);
-// 
+//
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_ROLE_LIST;
 //             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckAllStream.ToArray());
 //         }
     }
@@ -255,7 +255,7 @@ public class PlayerSender
 //                 {
 //                     sArray = sArray[0].Split(',');
 //                 }
-// 
+//
 //                 if (sArray.Length == 3)
 //                 {
 //                     fX = float.Parse(sArray[0]);
@@ -277,62 +277,62 @@ public class PlayerSender
 //             xInfo.config_id = UnicodeEncoding.Default.GetBytes("");
 //             xInfo.scene_id = 1;
 //             xInfo.class_id = UnicodeEncoding.Default.GetBytes("Player");
-// 
+//
 //             xAckMainBodyData.object_list.Add(xInfo);
-// 
+//
 //             MemoryStream xAckMianPlayerBodyStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.AckPlayerEntryList>(xAckMianPlayerBodyStream, xAckMainBodyData);
-// 
+//
 //             AFMsg.MsgBase xAckMianPlayerData = new AFMsg.MsgBase();
 //             xAckMianPlayerData.player_id = xID;
 //             xAckMianPlayerData.msg_data = xAckMianPlayerBodyStream.ToArray();
-// 
+//
 //             MemoryStream xAckAllStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckAllStream, xAckMianPlayerData);
-// 
+//
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_OBJECT_ENTRY;
 //             head.unDataLen = (UInt32)xAckAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckAllStream.ToArray());
 //             /////////////////////////////////////////////
 //             //property
-// 
-// 			AFMsg.ObjectPropertyInt propertyData = new AFMsg.ObjectPropertyInt();
-// 
+//
+//          AFMsg.ObjectPropertyInt propertyData = new AFMsg.ObjectPropertyInt();
+//
 //             PropertyInt xPropertyInt = new PropertyInt();
 //             xPropertyInt.property_name = UnicodeEncoding.Default.GetBytes("MOVE_SPEED");
 //             xPropertyInt.data = 50000;
 //             propertyData.property_list.Add(xPropertyInt);
 //             propertyData.player_id = xID;
-// 
+//
 //             MemoryStream xAckPropertyIntStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.ObjectPropertyInt>(xAckPropertyIntStream, propertyData);
-// 
+//
 //             AFMsg.MsgBase xPropertyIntMsg = new AFMsg.MsgBase();
 //             xPropertyIntMsg.player_id = xID;
 //             xPropertyIntMsg.msg_data = xAckPropertyIntStream.ToArray();
-// 
+//
 //             MemoryStream xAckPropertyIntAllStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckPropertyIntAllStream, xPropertyIntMsg);
-// 
+//
 //             MsgHead xAckPropertyhead = new MsgHead();
 //             xAckPropertyhead.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_PROPERTY_INT;
 //             xAckPropertyhead.unDataLen = (UInt32)xAckPropertyIntAllStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(xAckPropertyhead, xAckPropertyIntAllStream.ToArray());
-// 
+//
 //             /////////////////////////////////////////////
 //             mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING;
 //             //AFCRenderInterface.Instance.LoadScene(1, fX, fY, fZ);
 //             /////////////////////////////////////////////
-// 
+//
 //             //npc
 //             AFMsg.AckPlayerEntryList xAckNPCBodyData = new AFMsg.AckPlayerEntryList();
 //             for (int i = 0; i < 5; ++i)
 //             {
 //                 AFMsg.PlayerEntryInfo xNPCInfo = new AFMsg.PlayerEntryInfo();
-// 
+//
 //                 AFMsg.Ident xNPCID = new AFMsg.Ident();
 //                 xNPCID.index = i + 10000;
 //                 xNPCInfo.object_guid = xNPCID;
@@ -344,24 +344,24 @@ public class PlayerSender
 //                 xNPCInfo.config_id = UnicodeEncoding.Default.GetBytes("");
 //                 xNPCInfo.scene_id = 1;
 //                 xNPCInfo.class_id = UnicodeEncoding.Default.GetBytes("Player");
-// 
+//
 //                 xAckNPCBodyData.object_list.Add(xNPCInfo);
 //             }
-// 
+//
 //             MemoryStream xAckNPCBodyStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.AckPlayerEntryList>(xAckNPCBodyStream, xAckNPCBodyData);
-// 
+//
 //             AFMsg.MsgBase xAckNPCrData = new AFMsg.MsgBase();
 //             xAckNPCrData.player_id = xID;
 //             xAckNPCrData.msg_data = xAckNPCBodyStream.ToArray();
-// 
+//
 //             MemoryStream xAckAllNPCStream = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckAllNPCStream, xAckNPCrData);
-// 
+//
 //             MsgHead xNPCHead = new MsgHead();
 //             xNPCHead.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_OBJECT_ENTRY;
 //             xNPCHead.unDataLen = (UInt32)xAckAllNPCStream.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(xNPCHead, xAckAllNPCStream.ToArray());
 //             //////////////////////////////////////////////
 //         }
@@ -399,16 +399,16 @@ public class PlayerSender
 //             AFMsg.MsgBase xAckData = new AFMsg.MsgBase();
 //             xAckData.player_id = xData.mover;
 //             xAckData.msg_data = stream.ToArray();
-// 
+//
 //             MemoryStream xAckBody = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckBody, xAckData);
-// 
+//
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_MOVE;
 //             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckBody.ToArray());
-// 
+//
 //         }
     }
 
@@ -432,16 +432,16 @@ public class PlayerSender
 //             AFMsg.MsgBase xAckData = new AFMsg.MsgBase();
 //             xAckData.player_id = xData.mover;
 //             xAckData.msg_data = stream.ToArray();
-// 
+//
 //             MemoryStream xAckBody = new MemoryStream();
 //             Serializer.Serialize<AFMsg.MsgBase>(xAckBody, xAckData);
-// 
+//
 //             MsgHead head = new MsgHead();
 //             head.unMsgID = (UInt16)AFMsg.EGameMsgID.EGMI_ACK_MOVE_IMMUNE;
 //             head.unDataLen = (UInt32)xAckBody.Length + (UInt32)ConstDefine.AF_PACKET_HEAD_SIZE;
-// 
+//
 //             mxPlayerNet.mxBinMsgEvent.OnMessageEvent(head, xAckBody.ToArray());
-// 
+//
 //         }
     }
 
@@ -466,7 +466,7 @@ public class PlayerSender
         xData.tar_pos = xTarPos;
         xData.now_pos = xNowPos;
 
-        if (!nTargetID.IsNull())
+        if(!nTargetID.IsNull())
         {
             AFMsg.EffectData xEffectData = new AFMsg.EffectData();
 

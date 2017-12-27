@@ -1,8 +1,0 @@
-[submodule "ArkClient_Net"]
-	path = ArkClient_Net
-	url = https://github.com/ArkGame/ArkClient_Net.git
-	branch = master
-[submodule "ArkClient_Core"]
-	path = ArkClient_Core
-	url = https://github.com/ArkGame/ArkClient_Core.git
-	branch = master

@@ -8,7 +8,7 @@ using System.Threading;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
-using ProtoBuf;
+using Google.Protobuf;
 using AFTCPClient;
 using AFMsg;
 using AFCoreEx;

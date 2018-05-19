@@ -25,9 +25,9 @@ public class PlayerSender
         mxPlayerNet = clientnet;
     }
 
-    static public AFMsg.Ident AFToPB(AFCoreEx.AFIDENTID xID)
+    static public AFMsg.PBGUID AFToPB(AFCoreEx.AFIDENTID xID)
     {
-        AFMsg.Ident xIdent = new AFMsg.Ident();
+        AFMsg.PBGUID xIdent = new AFMsg.PBGUID();
         xIdent.High = xID.nHead64;
         xIdent.Low = xID.nData64;
 

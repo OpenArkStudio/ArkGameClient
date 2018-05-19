@@ -25,7 +25,7 @@ public class PlayerReciver
     {
     }
 
-    static public AFCoreEx.AFIDENTID PBToAF(AFMsg.Ident xID)
+    static public AFCoreEx.AFIDENTID PBToAF(AFMsg.PBGUID xID)
     {
         AFCoreEx.AFIDENTID xIdent = new AFCoreEx.AFIDENTID();
         xIdent.nHead64 = xID.High;
@@ -34,51 +34,51 @@ public class PlayerReciver
         return xIdent;
     }
 
-    static public AFCoreEx.AFIDataList.Var_Data PBPropertyToData(AFMsg.PropertyPBData xProperty)
+    static public AFCoreEx.AFIDataList.Var_Data PBPropertyToData(AFMsg.PBNodeData xDataNode)
     {
         AFCoreEx.AFIDataList.Var_Data xData = new AFCoreEx.AFIDataList.Var_Data();
-        xData.nType  = (AFIDataList.VARIANT_TYPE)xProperty.NdataType;
+        xData.nType  = (AFIDataList.VARIANT_TYPE)xDataNode.DataType;
         switch(xData.nType)
         {
         case AFIDataList.VARIANT_TYPE.VTYPE_BOOLEAN:
             {
-                xData.mData = xProperty.VariantData.BoolValue;
+                xData.mData = xDataNode.VariantData.BoolValue;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_INT:
             {
-                xData.mData = xProperty.VariantData.IntValue;
+                xData.mData = xDataNode.VariantData.IntValue;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_INT64:
             {
-                xData.mData = xProperty.VariantData.Int64Value;
+                xData.mData = xDataNode.VariantData.Int64Value;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
             {
-                xData.mData = xProperty.VariantData.FloatValue;
+                xData.mData = xDataNode.VariantData.FloatValue;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
             {
-                xData.mData = xProperty.VariantData.DoubleValue;
+                xData.mData = xDataNode.VariantData.DoubleValue;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
             {
-                xData.mData = xProperty.VariantData.StrValue;
+                xData.mData = xDataNode.VariantData.StrValue;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
             {
 
-                xData.mData = PBToAF(xProperty.VariantData.GuidValue);
+                xData.mData = PBToAF(xDataNode.VariantData.GuidValue);
             }
             break;
         default:
@@ -87,47 +87,47 @@ public class PlayerReciver
         return xData;
     }
 
-    static public AFCoreEx.AFIDataList.Var_Data PBRecordToData(AFMsg.RecordPBData xPbrecord, ref int nRow, ref int col)
+    static public AFCoreEx.AFIDataList.Var_Data PBRecordToData(AFMsg.PBCellData xTableCellData, ref int nRow, ref int col)
     {
         AFCoreEx.AFIDataList.Var_Data xData = new AFCoreEx.AFIDataList.Var_Data();
-        nRow = xPbrecord.Row;
-        col = xPbrecord.Col;
-        switch((AFIDataList.VARIANT_TYPE)xPbrecord.NdataType)
+        nRow = xTableCellData.Row;
+        col = xTableCellData.Col;
+        switch((AFIDataList.VARIANT_TYPE)xTableCellData.DataType)
         {
         case AFIDataList.VARIANT_TYPE.VTYPE_BOOLEAN:
             {
-                xData.mData = xPbrecord.VariantData.BoolValue;
+                xData.mData = xTableCellData.VariantData.BoolValue;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_INT:
             {
-                xData.mData = xPbrecord.VariantData.IntValue;
+                xData.mData = xTableCellData.VariantData.IntValue;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_INT64:
             {
-                xData.mData = xPbrecord.VariantData.Int64Value;
+                xData.mData = xTableCellData.VariantData.Int64Value;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
             {
-                xData.mData = xPbrecord.VariantData.FloatValue;
+                xData.mData = xTableCellData.VariantData.FloatValue;
             }
             break;
 
         case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
             {
-                xData.mData = xPbrecord.VariantData.DoubleValue;
+                xData.mData = xTableCellData.VariantData.DoubleValue;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
             {
-                xData.mData = xPbrecord.VariantData.StrValue;
+                xData.mData = xTableCellData.VariantData.StrValue;
             }
             break;
         case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
             {
-                xData.mData = PBToAF(xPbrecord.VariantData.GuidValue);
+                xData.mData = PBToAF(xTableCellData.VariantData.GuidValue);
             }
             break;
         }
@@ -158,20 +158,20 @@ public class PlayerReciver
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckSelectServer, EGMI_ACK_SELECT_SERVER);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckSwapScene, EGMI_ACK_SWAP_SCENE);
 
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckObjectEntry, EGMI_ACK_OBJECT_ENTRY);
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckObjectLeave, EGMI_ACK_OBJECT_LEAVE);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckEntityEnter, EGMI_ACK_OBJECT_ENTRY);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckEntityLeave, EGMI_ACK_OBJECT_LEAVE);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckMove, EGMI_ACK_MOVE);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckMoveImmune, EGMI_ACK_MOVE_IMMUNE);
 
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckPropertyData, EGMI_ACK_PROPERTY_DATA);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckNodeData, EGMI_ACK_PROPERTY_DATA);
 
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckRecordData, EGMI_ACK_RECORD_DATA);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckTableData, EGMI_ACK_RECORD_DATA);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckSwapRow, EGMI_ACK_SWAP_ROW);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckAddRow, EGMI_ACK_ADD_ROW);
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckRemoveRow, EGMI_ACK_REMOVE_ROW);
 
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckObjectRecordEntry, EGMI_ACK_OBJECT_RECORD_ENTRY);
-        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckObjectPropertyEntry, EGMI_ACK_OBJECT_PROPERTY_ENTRY);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckEntityDataTableEnter, EGMI_ACK_OBJECT_RECORD_ENTRY);
+        mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckEntityDataNodeEnter, EGMI_ACK_OBJECT_PROPERTY_ENTRY);
 
 
         mxPlayerNet.mxNet.RegisteredDelegation((int)AFMsg.EGameMsgID.EgmiAckSkillObjectx, EGMI_ACK_SKILL_OBJECTX);
@@ -339,13 +339,13 @@ public class PlayerReciver
 
         private void EGMI_ACK_OBJECT_ENTRY(MsgHead head, MemoryStream stream)
         {
-            AFMsg.AckPlayerEntryList xData = new AFMsg.AckPlayerEntryList();
-            xData = AFMsg.AckPlayerEntryList.Parser.ParseFrom(stream);
+            AFMsg.AckEntityEnterList xData = new AFMsg.AckEntityEnterList();
+            xData = AFMsg.AckEntityEnterList.Parser.ParseFrom(stream);
             //ReceiveMsg(stream, ref xData);
 
-            for (int i = 0; i < xData.ObjectList.Count; ++i)
+            for (int i = 0; i < xData.EntityList.Count; ++i)
             {
-                AFMsg.PlayerEntryInfo xInfo = xData.ObjectList[i];
+                AFMsg.EntityEnterInfo xInfo = xData.EntityList[i];
 
                 AFIDataList var = new AFCDataList();
                 var.AddString("X");
@@ -364,13 +364,13 @@ public class PlayerReciver
 
         private void EGMI_ACK_OBJECT_LEAVE(MsgHead head, MemoryStream stream)
         {
-            AFMsg.AckPlayerLeaveList xData = new AFMsg.AckPlayerLeaveList();
-            xData = AFMsg.AckPlayerLeaveList.Parser.ParseFrom(stream);
+            AFMsg.AckEntityLeaveList xData = new AFMsg.AckEntityLeaveList();
+            xData = AFMsg.AckEntityLeaveList.Parser.ParseFrom(stream);
             //ReceiveMsg(stream, ref xData);
 
-            for (int i = 0; i < xData.ObjectList.Count; ++i)
+            for (int i = 0; i < xData.EntityList.Count; ++i)
             {
-                AFCKernel.Instance.DestroyObject(PBToAF(xData.ObjectList[i]));
+                AFCKernel.Instance.DestroyObject(PBToAF(xData.EntityList[i]));
             }
         }
 
@@ -425,23 +425,23 @@ public class PlayerReciver
     /////////////////////////////////////////////////////////////////////
     private void EGMI_ACK_PROPERTY_DATA(MsgHead head, MemoryStream stream)
     {
-        AFMsg.ObjectPropertyPBData propertyData = ReceiveMsg(stream, ObjectPropertyPBData.Parser) as ObjectPropertyPBData;
+        AFMsg.EntityDataNode propertyData = ReceiveMsg(stream, EntityDataNode.Parser) as EntityDataNode;
 
 
-            AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.PlayerId));
+        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(propertyData.EntityId));
         AFIPropertyManager propertyManager = go.GetPropertyManager();
 
-        for(int i = 0; i < propertyData.PropertyList.Count; i++)
+        for(int i = 0; i < propertyData.DataNodeList.Count; i++)
         {
-            AFCoreEx.AFIDataList.Var_Data xData = PBPropertyToData(propertyData.PropertyList[i]);
-            AFIProperty property = propertyManager.GetProperty(propertyData.PropertyList[i].PropertyName);
+            AFCoreEx.AFIDataList.Var_Data xData = PBPropertyToData(propertyData.DataNodeList[i]);
+            AFIProperty property = propertyManager.GetProperty(propertyData.DataNodeList[i].NodeName);
             if(null == property)
             {
 
                 AFIDataList varList = new AFCDataList();
                 varList.AddDataObject(ref xData);
 
-                property = propertyManager.AddProperty(propertyData.PropertyList[i].PropertyName, varList);
+                property = propertyManager.AddProperty(propertyData.DataNodeList[i].NodeName, varList);
             }
 
             property.SetDataObject(ref xData);
@@ -450,36 +450,35 @@ public class PlayerReciver
 
     private void EGMI_ACK_RECORD_DATA(MsgHead head, MemoryStream stream)
     {
-        AFMsg.ObjectRecordPBData recordData = ReceiveMsg(stream, ObjectRecordPBData.Parser) as ObjectRecordPBData;
+        AFMsg.EntityDataTable recordData = ReceiveMsg(stream, EntityDataTable.Parser) as EntityDataTable;
 
-        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.PlayerId));
+        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.EntityId));
         AFIRecordManager recordManager = go.GetRecordManager();
-        AFIRecord record = recordManager.GetRecord(recordData.RecordName);
+        AFIRecord record = recordManager.GetRecord(recordData.TableName);
 
-        for(int i = 0; i < recordData.RecordList.Count; i++)
+        for(int i = 0; i < recordData.TableCellList.Count; i++)
         {
             int nRow = -1;
             int nCol = -1;
-            AFCoreEx.AFIDataList.Var_Data xRowData = PBRecordToData(recordData.RecordList[i], ref nRow, ref nCol);
+            AFCoreEx.AFIDataList.Var_Data xRowData = PBRecordToData(recordData.TableCellList[i], ref nRow, ref nCol);
             record.SetDataObject(nRow, nCol, xRowData);
         }
     }
 
     private void EGMI_ACK_SWAP_ROW(MsgHead head, MemoryStream stream)
     {
-        AFMsg.ObjectRecordSwap recordData =  ReceiveMsg(stream, ObjectRecordSwap.Parser) as ObjectRecordSwap;
+        AFMsg.EntityDataTableSwap recordData =  ReceiveMsg(stream, EntityDataTableSwap.Parser) as EntityDataTableSwap;
 
-        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.PlayerId));
+        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.EntityId));
         AFIRecordManager recordManager = go.GetRecordManager();
-        AFIRecord record = recordManager.GetRecord(recordData.OriginRecordName);
+        AFIRecord record = recordManager.GetRecord(recordData.OriginTableName);
 
 
         //目前认为在同一张表中交换吧
         record.SwapRow(recordData.RowOrigin, recordData.RowTarget);
-
     }
 
-    private void ADD_ROW(AFCoreEx.AFIDENTID self, string strRecordName, AFMsg.RecordAddRowStruct xAddStruct)
+    private void ADD_ROW(AFCoreEx.AFIDENTID self, string strRecordName, AFMsg.DataTableAddRow xAddStruct)
     {
         AFIObject go = AFCKernel.Instance.GetObject(self);
         AFIRecordManager xRecordManager = go.GetRecordManager();
@@ -490,14 +489,14 @@ public class PlayerReciver
 
         AFCoreEx.AFCDataList RowList = new AFCDataList();
         AFCoreEx.AFIDataList varListDesc = new AFCDataList();
-        for(int k = 0; k < xAddStruct.RecordDataList.Count; ++k)
+        for(int k = 0; k < xAddStruct.CellList.Count; ++k)
         {
-            AFMsg.RecordPBData addIntStruct = (AFMsg.RecordPBData)xAddStruct.RecordDataList[k];
-            if(addIntStruct.Col >= 0)
+            AFMsg.PBCellData addStruct = (AFMsg.PBCellData)xAddStruct.CellList[k];
+            if(addStruct.Col >= 0)
             {
                 int nRow = -1;
                 int nCol = -1;
-                AFCoreEx.AFIDataList.Var_Data xRowData = PBRecordToData(xAddStruct.RecordDataList[k], ref nRow, ref nCol);
+                AFCoreEx.AFIDataList.Var_Data xRowData = PBRecordToData(addStruct, ref nRow, ref nCol);
                 RowList.AddDataObject(ref xRowData);
                 varListDesc.AddDataObject(ref xRowData);
             }
@@ -514,25 +513,25 @@ public class PlayerReciver
 
     private void EGMI_ACK_ADD_ROW(MsgHead head, MemoryStream stream)
     {
-        AFMsg.ObjectRecordAddRow recordData =  ReceiveMsg(stream, ObjectRecordAddRow.Parser) as ObjectRecordAddRow;
+        AFMsg.EntityDataTableAddRow recordData =  ReceiveMsg(stream, EntityDataTableAddRow.Parser) as EntityDataTableAddRow;
 
-        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.PlayerId));
+        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.EntityId));
         AFIRecordManager recordManager = go.GetRecordManager();
 
         for(int i = 0; i < recordData.RowData.Count; i++)
         {
-            ADD_ROW(PBToAF(recordData.PlayerId), recordData.RecordName, recordData.RowData[i]);
+            ADD_ROW(PBToAF(recordData.EntityId), recordData.TableName, recordData.RowData[i]);
         }
     }
 
     private void EGMI_ACK_REMOVE_ROW(MsgHead head, MemoryStream stream)
     {
-            AFMsg.ObjectRecordRemove recordData = ObjectRecordRemove.Parser.ParseFrom(stream); //new AFMsg.ObjectRecordRemove();
-       // ReceiveMsg(stream, ref recordData);
+        AFMsg.EntityDataTableRemove recordData = EntityDataTableRemove.Parser.ParseFrom(stream); //new AFMsg.ObjectRecordRemove();
+        // ReceiveMsg(stream, ref recordData);
 
-        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.PlayerId));
+        AFIObject go = AFCKernel.Instance.GetObject(PBToAF(recordData.EntityId));
         AFIRecordManager recordManager = go.GetRecordManager();
-        AFIRecord record = recordManager.GetRecord(recordData.RecordName);
+        AFIRecord record = recordManager.GetRecord(recordData.TableName);
 
         for(int i = 0; i < recordData.RemoveRow.Count; i++)
         {
@@ -542,20 +541,20 @@ public class PlayerReciver
 
     private void EGMI_ACK_OBJECT_RECORD_ENTRY(MsgHead head, MemoryStream stream)
     {
-            AFMsg.MultiObjectRecordList xMultiObjectRecordData = MultiObjectRecordList.Parser.ParseFrom(stream); // new AFMsg.MultiObjectRecordList();
+        AFMsg.MultiEntityDataTableList xMultiObjectRecordData = MultiEntityDataTableList.Parser.ParseFrom(stream); // new AFMsg.MultiObjectRecordList();
        //ReceiveMsg(stream, ref xMultiObjectRecordData);
 
-        for(int i = 0; i < xMultiObjectRecordData.MultiPlayerRecord.Count; i++)
+        for(int i = 0; i < xMultiObjectRecordData.MultiEntityDataTableList_.Count; i++)
         {
-            AFMsg.ObjectRecordList xObjectRecordList = xMultiObjectRecordData.MultiPlayerRecord[i];
-            for(int j = 0; j < xObjectRecordList.RecordList.Count; j++)
+            AFMsg.EntityDataTableList xObjectRecordList = xMultiObjectRecordData.MultiEntityDataTableList_[i];
+            for(int j = 0; j < xObjectRecordList.DataTableList.Count; j++)
             {
-                AFMsg.ObjectRecordBase xObjectRecordBase = xObjectRecordList.RecordList[j];
-                for(int k = 0; k < xObjectRecordBase.RowStruct.Count; ++k)
+                AFMsg.EntityDataTableBase xObjectRecordBase = xObjectRecordList.DataTableList[j];
+                for(int k = 0; k < xObjectRecordBase.Row.Count; ++k)
                 {
-                    AFMsg.RecordAddRowStruct xAddRowStruct = xObjectRecordBase.RowStruct[i];
+                    AFMsg.DataTableAddRow xAddRow = xObjectRecordBase.Row[i];
 
-                    ADD_ROW(PBToAF(xObjectRecordList.PlayerId), xObjectRecordBase.RecordName, xAddRowStruct);
+                    ADD_ROW(PBToAF(xObjectRecordList.EntityId), xObjectRecordBase.TableName, xAddRow);
                 }
             }
         }
@@ -563,20 +562,20 @@ public class PlayerReciver
 
     private void EGMI_ACK_OBJECT_PROPERTY_ENTRY(MsgHead head, MemoryStream stream)
     {
-        AFMsg.MultiObjectPropertyList xMultiObjectPropertyList = MultiObjectPropertyList.Parser.ParseFrom(stream);
+        AFMsg.MultiEntityDataNodeList xMultiObjectPropertyList = MultiEntityDataNodeList.Parser.ParseFrom(stream);
        // ReceiveMsg(stream, ref xMultiObjectPropertyList);
 
-        for(int i = 0; i < xMultiObjectPropertyList.MultiPlayerProperty.Count; i++)
+        for(int i = 0; i < xMultiObjectPropertyList.MultiEntityDataNodeList_.Count; i++)
         {
-            AFMsg.ObjectPropertyList xPropertyData = xMultiObjectPropertyList.MultiPlayerProperty[i];
-            AFIObject go = AFCKernel.Instance.GetObject(PBToAF(xPropertyData.PlayerId));
+            AFMsg.EntityDataNodeList xPropertyData = xMultiObjectPropertyList.MultiEntityDataNodeList_[i];
+            AFIObject go = AFCKernel.Instance.GetObject(PBToAF(xPropertyData.EntityId));
             AFIPropertyManager xPropertyManager = go.GetPropertyManager();
 
-            for(int j = 0; j < xPropertyData.PropertyDataList.Count; j++)
+            for(int j = 0; j < xPropertyData.DataNodeList.Count; j++)
             {
-                    string strPropertyName = xPropertyData.PropertyDataList[j].PropertyName;// System.Text.Encoding.Default.GetString();
+                string strPropertyName = xPropertyData.DataNodeList[j].NodeName;
 
-                AFCoreEx.AFIDataList.Var_Data  xPropertyValue  = PBPropertyToData(xPropertyData.PropertyDataList[j]);
+                AFCoreEx.AFIDataList.Var_Data xPropertyValue  = PBPropertyToData(xPropertyData.DataNodeList[j]);
                 AFIProperty xProperty = xPropertyManager.GetProperty(strPropertyName);
                 if(null == xProperty)
                 {
